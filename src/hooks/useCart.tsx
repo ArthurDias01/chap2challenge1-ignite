@@ -35,10 +35,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const addProduct = async (productId: number) => {
     try {
       const updatedCart = [...cart];
-      const productExists = updatedCart.find(product => product.id === productId);
+      const productExistinsOnCart = updatedCart.find(product => product.id === productId);
       const stock = await api.get(`/stock/${productId}`); // stq do produto
       const stockAmount = stock.data.amount;
-      const currentAmount = productExists ? productExists.amount : 0;
+      const currentAmount = productExistinsOnCart ? productExistinsOnCart.amount : 0;
       const amount = currentAmount + 1;
 
       if (amount > stockAmount) {
@@ -46,8 +46,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         return;
       }
 
-      if (productExists) {
-        productExists.amount = amount;
+      if (productExistinsOnCart) {
+        productExistinsOnCart.amount = amount;
       } else {
         const product = await api.get(`/products/${productId}`);
 
@@ -67,10 +67,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const removeProduct = (productId: number) => {
     try {
       const updatedCart = [...cart];
-      const productIndex = updatedCart.findIndex(product => product.id === productId)
+      const productIndex = updatedCart.findIndex(product => product.id === productId) // retorna -1 caso não encontre o produto do carrinho com o mesmo id que o productId entrado na função
 
       if (productIndex >= 0) {
-        updatedCart.splice(productIndex, 1);
+        updatedCart.splice(productIndex, 1); //remove dentro do array somente o elemento de indice (productIndex) encontrado, o 1 é pra especificar quantos elementos serão retirados do array
         setCart(updatedCart);
         localStorage.setItem('@RocketShoes:cart', JSON.stringify(updatedCart));
       } else {
@@ -100,10 +100,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       }
 
       const updatedCart = [...cart];
-      const productExists = updatedCart.find(product => product.id === productId);
+      const productExistinsOnCart = updatedCart.find(product => product.id === productId);
 
-      if (productExists) {
-        productExists.amount = amount;
+      if (productExistinsOnCart) {
+        productExistinsOnCart.amount = amount;
         setCart(updatedCart);
         localStorage.setItem('@RocketShoes:cart', JSON.stringify(updatedCart));
       } else {
